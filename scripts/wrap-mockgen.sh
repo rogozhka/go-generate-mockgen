@@ -32,7 +32,6 @@
 # Check https://github.com/rogozhka/go-generate-mockgen for usage example w/ couple of tests.
 # Copyright (c) 2024 Serge R. thecoder@yandex.ru
 
-
 LINE=""
 SOURCE=""
 PACKAGE=""
@@ -67,8 +66,22 @@ MOCK_NAME="Mock"${MOCK_NAME}
 TARGET=$(basename "$SOURCE" .go)_generated.go
 
 TARGET_PACKAGE=mocks
-# optional: for package mypackage make target as mypackage_mocks
+# optional: for mypackage_mocks
 #TARGET_PACKAGE=${PACKAGE}_mocks
+
+GOMOD_CHECK_PATH="./go.mod"
+
+if [ ! -f $GOMOD_CHECK_PATH  ]; then
+    # In case of run from docker.
+    # The go.mod file is missing from the directory. Since go:generate runs the script
+    # in the current directory of the file, we can only Docker-mount the directory
+    # containing the file, while go.mod might be several levels above.
+    # Therefore, let's create a go.mod-stub to prevent mockgen
+    # from going crazy searching for it.
+    echo "module $PACKAGE" > $GOMOD_CHECK_PATH
+    echo "go 1.23.4" >> $GOMOD_CHECK_PATH
+    go_mod_stub_was_created=true
+fi
 
 mockgen -source=$SOURCE \
 -destination=${TARGET_PACKAGE}/$TARGET \
@@ -76,3 +89,7 @@ mockgen -source=$SOURCE \
 -typed \
 -package=$TARGET_PACKAGE \
 $INTERFACE
+
+if [ "$go_mod_stub_was_created" = true ]; then
+    rm $GOMOD_CHECK_PATH
+fi
