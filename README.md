@@ -44,7 +44,7 @@ type myInterface interface {
 1. You should have docker installed. Refer to [docs.docker.com/engine/install](https://docs.docker.com/engine/install/)
 2. Place //go:generate instruction in front of mocked interface, follow the exact format below: 
 ```go
-//go:generate docker run -v ${PWD}:/w rogozhka/go-generate-mockgen -line=$GOLINE -source=$GOFILE -package=$GOPACKAGE
+//go:generate docker run --rm -v ${PWD}:/w rogozhka/go-generate-mockgen -line=$GOLINE -source=$GOFILE -package=$GOPACKAGE
 type myInterface interface {
     Method()
 }
