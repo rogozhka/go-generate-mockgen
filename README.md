@@ -25,7 +25,7 @@ See the [example](example/) folder for simple and table test cases. Notice the n
 
 ### Installation and usage
 
-#### Local wrap-mockgen.sh
+#### Local wrap-mockgen.sh (useful with lots of private repo)
 
 1. Place the file [scripts/wrap-mockgen.sh](scripts/wrap-mockgen.sh) in a directory that is included in your $PATH.
 2. Set executable permissions ```chmod +x path/to/wrap-mockgen.sh ```
